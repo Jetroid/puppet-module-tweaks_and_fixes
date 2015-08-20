@@ -65,7 +65,7 @@ class tweaks_and_fixes (
     } ->
 
     # Unfortunately must use exec here. There is no alternative.
-    exec{'dconf-update':
+    exec{'dconf-update-amazon':
       command     => '/usr/bin/dconf update',
       subscribe   => File['/etc/dconf/db/local.d/amazon.keys'],
       refreshonly => true,
@@ -82,7 +82,7 @@ class tweaks_and_fixes (
     } ->
 
     # Unfortunately must use exec here. There is no alternative.
-    exec{'dconf-update':
+    exec{'dconf-update-noupdates':
       command     => '/usr/bin/dconf update',
       subscribe   => File['/etc/dconf/db/local.d/noupdates.keys'],
       refreshonly => true,
@@ -99,7 +99,7 @@ class tweaks_and_fixes (
     } ->
 
     # Unfortunately must use exec here. There is no alternative.
-    exec{'dconf-update':
+    exec{'dconf-update-favourites':
       command     => '/usr/bin/dconf update',
       subscribe   => File['/etc/dconf/db/local.d/favourites.keys'],
       refreshonly => true,
