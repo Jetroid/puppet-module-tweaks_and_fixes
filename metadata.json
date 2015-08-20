@@ -1,0 +1,14 @@
+{
+  "name": "Jetroid-tweaks_and_fixes",
+  "version": "0.1.0",
+  "author": "Jetroid",
+  "summary": "Tweaks and fixes to several minor problems: Enable Serial Port Access; Fix PulseAudio, Remove LightLocker, Remove Amazon Search, Hide Update Notifier, Add Launcher Defaults.",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": null,
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+
