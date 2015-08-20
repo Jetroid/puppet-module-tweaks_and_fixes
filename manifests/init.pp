@@ -24,7 +24,7 @@ class tweaks_and_fixes (
       owner   => root,
       group   => root,
       ensure  => present,
-      mode    => 644,
+      mode    => "0644",
       source  => "puppet:///modules/tweaks_and_fixes/99-serial.rules",
     }
   }
@@ -32,6 +32,8 @@ class tweaks_and_fixes (
   # Fix for pulse audio on 14.04 with the samba mounted home stores as we can't chgrp on them for some reason.
   if $do_fix_pulseaudio {
 
+    #TODO: Rather than create the directories if they don't exist (which implies pulseaudio is not installed),
+    #      we should instead skip this installation. 
     file{ ['/etc/xdg/','/etc/xdg/autostart/']:
       ensure  => directory,
     }
@@ -40,7 +42,7 @@ class tweaks_and_fixes (
       owner   => root,
       group   => root,
       ensure  => present,
-      mode    => 644,
+      mode    => "0644",
       source  => "puppet:///modules/tweaks_and_fixes/pulseaudio.desktop",
     }
 
@@ -48,7 +50,7 @@ class tweaks_and_fixes (
       owner   => root,
       group   => root,
       ensure  => present,
-      mode    => 755,
+      mode    => "0755",
       source  => "puppet:///modules/tweaks_and_fixes/start-pulseaudio-in-tmp",
     }
   }
