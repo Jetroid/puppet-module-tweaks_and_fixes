@@ -1,0 +1,8 @@
+#!/bin/bash
+# Hack to get pulse audio using the /tmp folder for its files as it fails when using ~ as we can't chgrp in home for some reason - KEP 1/8/14.
+
+export PULSE_DIR="/tmp/pulse-$( whoami )"; 
+export PULSE_CONFIG_PATH=$PULSE_DIR/config; 
+export PULSE_STATE_PATH=$PULSE_DIR/state; 
+export PULSE_RUNTIME_PATH=$PULSE_DIR/runtime; 
+mkdir -p $PULSE_DIR/{config,state,runtime} && chmod -R 700 $PULSE_DIR && start-pulseaudio-x11

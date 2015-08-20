@@ -1,0 +1,4 @@
+# Sets read/write access to serial ports for everyone
+KERNEL=="ttyS*", MODE="0666"
+KERNEL=="ttyUSB*", MODE="0666"
+KERNEL=="ttyACM*", MODE="0666"

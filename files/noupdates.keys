@@ -1,0 +1,4 @@
+# No point showing update notifier, nobody can run updates...
+[com/ubuntu/update-notifier]
+show-apport-crashes=false
+auto-launch=false

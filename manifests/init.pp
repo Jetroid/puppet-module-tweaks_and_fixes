@@ -1,41 +1,108 @@
 # == Class: tweaks_and_fixes
 #
-# Full description of class tweaks_and_fixes here.
+# Tweaks and fixes to several minor problems:
 #
-# === Parameters
+# *Enable Serial Port Access; 
+# *Fix PulseAudio;
+# *Remove LightLocker;
+# *Remove Amazon Search;
+# *Hide Update Notifier;
+# *Add Launcher Defaults.
 #
-# Document parameters here.
-#
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
-#
-# === Variables
-#
-# Here you should define a list of variables that this module would require.
-#
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if
-#   it has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should be avoided in favor of class parameters as
-#   of Puppet 2.6.)
-#
-# === Examples
-#
-#  class { 'tweaks_and_fixes':
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ],
-#  }
-#
-# === Authors
-#
-# Author Name <author@domain.com>
-#
-# === Copyright
-#
-# Copyright 2015 Your name here, unless otherwise noted.
-#
-class tweaks_and_fixes {
+class tweaks_and_fixes (
+  $do_grant_serial_port_access = $tweaks_and_fixes::params::do_grant_serial_port_access,
+  $do_fix_pulseaudio           = $tweaks_and_fixes::params::do_fix_pulseaudio,
+  $do_remove_lightlocker       = $tweaks_and_fixes::params::do_remove_lightlocker,
+  $do_remove_amazon            = $tweaks_and_fixes::params::do_remove_amazon,
+  $do_hide_update_notifier     = $tweaks_and_fixes::params::do_hide_update_notifier,
+  $do_add_launcher_defaults    = $tweaks_and_fixes::params::do_add_launcher_defaults,
+) inherits tweaks_and_fixes::params {
 
+# Grant serial port access.
+  if $do_grant_serial_port_access {
+    file{ '/etc/udev/rules.d/99-serial.rules':
+      owner   => root,
+      group   => root,
+      ensure  => present,
+      mode    => 644,
+      source  => "puppet:///modules/tweaks_and_fixes/99-serial.rules",
+    }
+  }
 
+  # Fix for pulse audio on 14.04 with the samba mounted home stores as we can't chgrp on them for some reason.
+  if $do_fix_pulseaudio {
+    file{ '/etc/xdg/autostart/pulseaudio.desktop':
+      owner   => root,
+      group   => root,
+      ensure  => present,
+      mode    => 644,
+      source  => "puppet:///modules/tweaks_and_fixes/pulseaudio.desktop",
+    }
+
+    file{ '/usr/local/bin/start-pulseaudio-in-tmp':
+      owner   => root,
+      group   => root,
+      ensure  => present,
+      mode    => 755,
+      source  => "puppet:///modules/tweaks_and_fixes/start-pulseaudio-in-tmp",
+    }
+  }
+
+  # Remove light-locker as it does silly things when you lock the screen
+  if $do_remove_lightlocker {
+    package {['light-locker', 'light-locker-settings']:
+      ensure => purged,
+    }
+  }
+
+  # Remove amazon search crap
+  if $do_remove_amazon {
+    require dconf_profile
+
+    file{'/etc/dconf/db/local.d/amazon.keys':
+      ensure => present,
+      source => 'puppet:///modules/tweaks_and_fixes/amazon.keys',
+    } ->
+
+    # Unfortunately must use exec here. There is no alternative.
+    exec{'dconf-update':
+      command     => '/usr/bin/dconf update',
+      subscribe   => File['/etc/dconf/db/local.d/amazon.keys'],
+      refreshonly => true,
+    }
+  }
+
+  # Don't show update notifier, nobody can run updates...
+  if $do_hide_update_notifier {
+    require dconf_profile
+
+    file{'/etc/dconf/db/local.d/noupdates.keys':
+      ensure => present,
+      source => 'puppet:///modules/tweaks_and_fixes/noupdates.keys',
+    } ->
+
+    # Unfortunately must use exec here. There is no alternative.
+    exec{'dconf-update':
+      command     => '/usr/bin/dconf update',
+      subscribe   => File['/etc/dconf/db/local.d/noupdates.keys'],
+      refreshonly => true,
+    }
+  }
+
+  # Add some useful favourites to the launcher and remove some we can't/don't use.
+  if $do_add_launcher_defaults {
+    require dconf_profile
+
+    file{'/etc/dconf/db/local.d/favourites.keys':
+      ensure => present,
+      source => 'puppet:///modules/tweaks_and_fixes/favourites.keys',
+    } ->
+
+    # Unfortunately must use exec here. There is no alternative.
+    exec{'dconf-update':
+      command     => '/usr/bin/dconf update',
+      subscribe   => File['/etc/dconf/db/local.d/favourites.keys'],
+      refreshonly => true,
+    }
+  }
 }
