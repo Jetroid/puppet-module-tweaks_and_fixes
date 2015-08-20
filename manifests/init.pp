@@ -31,6 +31,11 @@ class tweaks_and_fixes (
 
   # Fix for pulse audio on 14.04 with the samba mounted home stores as we can't chgrp on them for some reason.
   if $do_fix_pulseaudio {
+
+    file{ ['/etc/xdg/','/etc/xdg/autostart/']:
+      ensure  => directory,
+    }
+
     file{ '/etc/xdg/autostart/pulseaudio.desktop':
       owner   => root,
       group   => root,
