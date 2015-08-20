@@ -1,5 +1,5 @@
 # Default parameters
-class pam_mount::params {
+class tweaks_and_fixes::params {
 
   $do_grant_serial_port_access = true
   $do_fix_pulseaudio           = true
