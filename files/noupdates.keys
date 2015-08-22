@@ -1,3 +1,6 @@
+#       This file is being maintained by Puppet.
+# 	DO NOT EDIT
+#
 # No point showing update notifier, nobody can run updates...
 [com/ubuntu/update-notifier]
 show-apport-crashes=false

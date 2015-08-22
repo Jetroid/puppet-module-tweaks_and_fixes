@@ -1,3 +1,6 @@
+#       This file is being maintained by Puppet.
+# 	DO NOT EDIT
+#
 # Set some useful defaults in the launcher, and remove crap we can't use
 [com/canonical/unity/launcher]
 favourites=['application://gnome-terminal.desktop', 'application://nautilus-home.desktop', 'application://firefox.desktop', 'application://chromium-browser.desktop', 'application://libreoffice-writer.desktop', 'application://libreoffice-calc.desktop', 'application://libreoffice-impress.desktop', 'application://remmina.desktop', 'application://nxclient.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']

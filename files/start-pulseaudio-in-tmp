@@ -1,4 +1,7 @@
 #!/bin/bash
+#       This file is being maintained by Puppet.
+# 	DO NOT EDIT
+#
 # Hack to get pulse audio using the /tmp folder for its files as it fails when using ~ as we can't chgrp in home for some reason - KEP 1/8/14.
 
 export PULSE_DIR="/tmp/pulse-$( whoami )"; 
